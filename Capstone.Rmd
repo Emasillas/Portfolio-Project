@@ -1,0 +1,289 @@
+---
+title: "Capstone Project"
+author: "Emmanuel Obayomi"
+date: '2022-05-31'
+output: html_document
+---
+
+# Case Study; Cyclistic Company
+
+### Emmanuel Obayomi
+
+2022 - 05 - 30
+
+## Table of content  
+* 1.0 - Introduction 1.1. - Characters and Products  
+  1.2 - About the company  
+* 2.0 - Phase One; *ASK*  
+  2.1 - Business Task  
+* 3.0 - Phase Two; *PREPARE*
+
+
+### Introduction
+I am a junior data analyst working in the marketing analyst team at Cyclistic, a bike-share company in Chicago.  
+The director of marketing believes the company’s future success depends on maximizing the number of annual memberships. Therefore, my team wants to understand how casual riders and annual members use Cyclistic bikes differently.  
+From the insights I gather, my team will design a new marketing strategy to convert casual riders into annual members. But first, Cyclistic executives must approve my recommendations, so they must be backed up with compelling data insights and professional data visualizations.  
+At the end,I will present my analysis to the Cyclistic executive team along with my high-level recommendations for Cyclistic’s marketing strategy.
+
+*Characters and teams*  
+***Lily Moreno:*** The director of marketing who is responsible for the development of campaigns and initiatives to promote the bike-share program. 
+
+***Cyclistic marketing analytics team:*** A team of data analysts who are responsible for collecting, analyzing, and reporting data that helps guide Cyclistic marketing strategy. I joined this team six months ago and have been busy learning about Cyclistic’s mission and business goals — as well as how I, as a junior data analyst, can help Cyclistic achieve them.
+
+***Cyclistic executive team:*** The notoriously detail-oriented executive team will decide whether to approve the recommended marketing program.
+
+***Cyclistic:*** A bike-share program that features more than 5,800 bicycles and 600 docking stations. Cyclistic sets itself apart by also offering reclining bikes, hand tricycles, and cargo bikes, making bike-share more inclusive to people with disabilities and riders who can’t use a standard two-wheeled bike. 
+
+### About the company
+In 2016, Cyclistic launched a successful bike-share offering. Since then, the program has grown to a fleet of 5,824 bicycles that are geotracked and locked into a network of 692 stations across Chicago. The bikes can be unlocked from one station and returned to any other station in the system anytime.
+
+Until now, Cyclistic’s marketing strategy relied on building general awareness and appealing to broad consumer segments. One approach that helped make these things possible was the flexibility of its pricing plans: single-ride passes, full-day passes, and annual memberships. Customers who purchase single-ride or full-day passes are referred to as casual riders. Customers who purchase annual memberships are Cyclistic members.
+
+### Phase One; ASK  
+*Business Task*  
+I have been asked to Identify trends on how casual riders and annual members use Cyclistic bikes differently.  
+*Stakeholders*  
+
+* ***Lily Moreno*** - Director of marketing for Cyclistic  
+* ***Cyclistic executive team*** -They will decide on approving the recommendations for the marketing program.  
+* ***Cyclistic marketing analytics team***  
+
+### Phase Two; PREPARE  
+*Data Location*  
+The dataset used is a public data set, and can be accessed [here](https://divvy-tripdata.s3.amazonaws.com/index.html).  
+*Data License*  
+The data was made available by Motivate International Inc. under this [license](https://ride.divvybikes.com/data-license-agreement).  
+*Data Location*
+Data was downloaded and stored in the desktop.  
+I created a folder and moved the last 12 months of Data (***May 2021 - April 2022***)  
+
+*Data Organization*  
+Data is segregated into months, and are in a csv file format.  
+
+*Data Credibility*  
+Data was gotten directly from the company's users i.e bike riders, so there is no issue with bias and credibility  
+
+*Data Integrity*  
+Data was checked for accuracy, completeness, trustworthiness and consistency. The data has consistent columns, it is complete and accurate as it has all required information that can be used to answer the question, and it can be trusted.
+
+*Data Problems*
+There were few rows that has no values (N/A) and needed to be cleaned.  
+
+
+### Phase 3; PROCESS  
+*Tools to be used*  
+There are 12 csv files which contain over 5 million rows cumulative. This is a large data set and can be easily analysed using a relative database management system (RDMS) or a programming language like R. I will be using R programming language to analyse the data set.  
+
+*Data Cleaning Steps*
+a) I have combined all the CSV files of each months into a single data frame  using the **bind_rows()**  
+b) I removed all the empty rows and columns from the combined data frame using the **remove_empty()**    
+c) I looked out for the unique values in each variable using **count()** to confirm consistency.  
+d) I omitted **N/A** values from the entire data frame using the **na.omit()**.
+e) I checked out for duplicates using **distinct()**  
+
+*Data Cleaning Documentation*  
+Kindly find below steps in the data cleaning process  
+
+Installing and loading of required packages
+install.packages("janitor")
+install.packages("skimr")
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(ggplot2)
+library(janitor)
+library(skimr)
+```
+1. Loading individual csv files and combining them into a single data frame.
+```{r}
+library(readr)
+df1 <- read_csv("C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/202105-divvy-tripdata.csv")
+df2 <- read_csv("C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/202106-divvy-tripdata.csv")
+df3 <- read_csv("C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/202107-divvy-tripdata.csv")
+df4 <- read_csv("C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/202108-divvy-tripdata.csv")
+df5 <- read_csv("C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/202109-divvy-tripdata.csv")
+df6 <- read_csv("C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/202110-divvy-tripdata.csv")
+df7 <- read_csv("C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/202111-divvy-tripdata.csv")
+df8 <- read_csv("C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/202112-divvy-tripdata.csv")
+df9 <- read_csv("C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/202201-divvy-tripdata.csv")
+df10 <- read_csv("C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/202202-divvy-tripdata.csv")
+df11 <- read_csv("C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/202203-divvy-tripdata.csv")
+df12 <- read_csv("C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/202204-divvy-tripdata.csv")
+```
+
+```{r}
+all_trips <- bind_rows(df1,df2,df3,df4,df5,df6,df7,df8,df9,df10,df11,df12)
+```
+
+2. Removing empty rows from data frame and verifying if they have been removed.
+```{r}
+all_trips <- remove_empty(all_trips, which =c("rows", "cols"))
+count(filter(all_trips, start_station_name== ' '), start_station_name, sort = TRUE)
+```
+3. Checking for unique values in the variable
+```{r}
+all_trips %>%
+  count(rideable_type)
+```
+4. Omitting N/A Values from data frame
+```{r}
+all_trips_new <- na.omit(all_trips)
+```
+  
+5. Removing duplicates from data frame
+```{r}
+all_trips_new <- all_trips_new %>%
+  distinct(ride_id, .keep_all = TRUE)
+```
+
+6. Verifying for unique values in the variable
+```{r}
+all_trips_new %>%
+  count(member_casual)
+```
+
+7. Addition of columns that list the date, month, day, and year. This will help in aggregating data frame for month, day, or year. 
+```{r}
+all_trips_new$date <- as.Date(all_trips_new$started_at)
+all_trips_new$month <- format(as.Date(all_trips_new$date), "%m")
+all_trips_new$day <- format(as.Date(all_trips_new$date), "%d")
+all_trips_new$year <- format(as.Date(all_trips_new$date), "%Y")
+all_trips_new$day_of_week <- format(as.Date(all_trips_new$date), "%A")
+
+```
+8. Creating a new column for riding time in seconds. This will be the difference between the ride's start time and end time.
+```{r}
+all_trips_new <- all_trips_new %>% 
+  mutate(riding_time = as.numeric(ended_at-started_at))
+```
+9. Instances where bikes were removed for quality checks could result in negative riding time. Therefore I removed all negative riding time. There were 462,468 rows removed.
+```{r}
+all_trips_new_V2 <- all_trips_new[!(all_trips_new$riding_time<0),]
+```
+
+### Phase Four; ANALYZE  
+As we begin to analyze to find the pattern between casual and member users, we need to look at the basic descriptive analysis of our data
+```{r}
+summary(all_trips_new_V2$riding_time)
+```
+From the summary, we noticed the maximum time is more than 35 days and minimum time is zero. We suspect outliers here.  
+To confirm where the outliers are, we check each quartile values
+```{r}
+quantiles <- quantile(all_trips_new_V2$riding_time, seq(0,1,by=0.05))
+quantiles
+```
+We can see that values that fall below 5% and above 95% are outliers and are unworthy of consideration.  
+
+Considering only values between 5% and 95% interval
+```{r}
+all_trips_new_V2 <- all_trips_new_V2 %>% 
+  filter(riding_time > as.numeric(quantiles['5%'])) %>% 
+  filter(riding_time < as.numeric(quantiles['95%']))
+```
+Then we recheck the basic descriptive analysis, and we can see that the outliers are no more part of our data.
+```{r}
+summary(all_trips_new_V2$riding_time)
+```
+
+We compare ride statistics of both casual users and member users
+```{r}
+aggregate(all_trips_new_V2$riding_time ~ all_trips_new_V2$member_casual, FUN = mean)
+aggregate(all_trips_new_V2$riding_time ~ all_trips_new_V2$member_casual, FUN = median)
+aggregate(all_trips_new_V2$riding_time ~ all_trips_new_V2$member_casual, FUN = max)
+aggregate(all_trips_new_V2$riding_time ~ all_trips_new_V2$member_casual, FUN = min)
+
+```
+We check for the riding time by each day for casual users and member users.
+```{r}
+aggregate(all_trips_new_V2$riding_time ~ all_trips_new_V2$member_casual + all_trips_new_V2$day_of_week, FUN = mean)
+```
+We noticed the days of the week are not properly ordered, so we order it
+```{r}
+all_trips_new_V2$day_of_week <- ordered(all_trips_new_V2$day_of_week, levels=c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
+
+```
+Then we recheck to see if the days of the week has been ordered
+```{r}
+aggregate(all_trips_new_V2$riding_time ~ all_trips_new_V2$member_casual + all_trips_new_V2$day_of_week, FUN = mean)
+```
+Now we look at the total number of rides and average ride duration (in seconds) by weekday for casual and member users
+```{r}
+all_trips_new_V2 %>% 
+  mutate(weekday = wday(started_at, label = TRUE)) %>%  #creates weekday field using wday()
+  group_by(member_casual, weekday) %>%  #groups by usertype and weekday
+  summarise(number_of_rides = n()							#calculates the number of rides and average duration 
+  ,average_duration = mean(riding_time)) %>% 		# calculates the average duration
+  arrange(member_casual, weekday)
+```
+We compare numbers of casual users and member users
+```{r}
+library(scales)
+all_trips_new_V2 %>% 
+  group_by(member_casual) %>% 
+  summarize(count=length(riding_time),
+            percentage_of_total=(length(riding_time)/nrow(all_trips_new_V2))*100)
+```
+
+
+### Phase 5; VISUALIZE
+We visualize the number of rides by weekday for casual and member users.
+```{r}
+all_trips_new_V2 %>% 
+  mutate(weekday = wday(started_at, label = TRUE)) %>%  
+  group_by(member_casual, weekday) %>%  
+  summarise(number_of_rides = n()							
+  ,average_duration = mean(riding_time)) %>% 		
+  arrange(member_casual, weekday)	%>% 
+  ggplot(aes(x = weekday, y = number_of_rides, fill = member_casual)) +
+  geom_col(position = "dodge")
+```
+
+We visualize the average duration by weekday for casual and member users.
+```{r}
+all_trips_new_V2 %>% 
+  mutate(weekday = wday(started_at, label = TRUE)) %>% 
+  group_by(member_casual, weekday) %>% 
+  summarise(number_of_rides = n()
+            ,average_duration = mean(riding_time)) %>% 
+  arrange(member_casual, weekday)  %>% 
+  ggplot(aes(x = weekday, y = average_duration, fill = member_casual)) +
+  geom_col(position = "dodge")
+```
+
+Now we create various data set to analyze in Tableau:
+counts <- aggregate(all_trips_new_V2$riding_time ~ all_trips_new_V2$member_casual + all_trips_new_V2$day_of_week, FUN = mean)
+write.csv(counts, file = "C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/avg_ride_length.csv")
+
+counts2 <- aggregate(all_trips_new_V2$ride_id ~ all_trips_new_V2$member_casual + all_trips_new_V2$day_of_week, FUN = length)
+write.csv(counts2, file = "C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/num_of_rides_by_day.csv")
+
+counts3 <- aggregate(all_trips_new_V2$ride_id ~ all_trips_new_V2$member_casual + all_trips_new_V2$month, FUN = length)
+write.csv(counts3, file = "C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/num_of_rides_by_month.csv")
+
+counts4 <- aggregate(all_trips_new_V2$ride_id ~ all_trips_new_V2$member_casual + all_trips_new_V2$rideable_type, FUN = length)
+write.csv(counts4, file = "C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/num_of_rides_by_rideaable_type.csv")  
+
+![Cyclistic Bike-Share Analysis](/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/Dashboard 1.png)
+
+
+Now we create various data set to analyze in Microsoft PowerBI
+```{r}
+write_csv(all_trips_new_V2,"C:/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/all_trips_new_V2.csv")
+```
+![Cyclistic Bike-Share Analysis](/Users/Obayomi/Documents/Data Analytic Class/Google/Course eight/Capstone Project 1/Analysis/Cyclistic Bike-Share Analysis Visualization.png)
+
+### Phase 6; ACT  
+
+For the last step in our data analysis process, we will be giving some recommendations to the marketing team. Before then, we noticed some key findings.  
+*Key Findings*  
+1. There are more member users than casual users.  
+2. Member users are higher than casual users on weekdays while casual users are more on weekends. This could be that member users use bikes to commute to their workplace.  
+3. On a average, casual users ride longer than members users whether it be a weekday or a weekend.This could be that casual users have unrestricted movements since they don't use it to commute to work  
+4. There is high usage of bikes around June to August. This implies that summer time encourages more usage of the bikes.  
+5. No member user makes use of a docked type bike and most users make use of the classic bike type.  
+
+*Recommendations*  
+1. Target users who use the bikes on weekends since more are casual users.  
+2. Organize a special campaign during summer since most bikes are used during this period.  
+3. Create a discount plan for those who take longer rides but can only be benefited if they are members.
